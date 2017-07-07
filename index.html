@@ -95,20 +95,39 @@ I can customize the length of each pomodoro.
   </div>
   <script>
 
-  const timer = document.querySelector("#timer");
-  const buttons = document.querySelector(".buttons");
-  const start = document.querySelector("#start");
-  const stop = document.querySelector("#stop");
-  const reset = document.querySelector("#reset");
-  const add = document.querySelector("#add");
-  const subtract = document.querySelector("#subtract");
+  var timer = document.querySelector("#timer");
+  var buttons = document.querySelector(".buttons");
+  var start = document.querySelector("#start");
+  var stop = document.querySelector("#stop");
+  var reset = document.querySelector("#reset");
+  var add = document.querySelector("#add");
+  var subtract = document.querySelector("#subtract");
+  var counter = 25;
 
-
-    buttons.addEventListener("click", pomodoroClock, false);
+  buttons.addEventListener("click", pomodoroClock, false);
 
     function pomodoroClock(e){
-        console.log(e.target);
+      if (e.target !== e.currentTarget){ // prevents click event on parent div
+        // start timer
+        // TODO: Pressing more than once speeds up the timer. Need to prevent this.
+        if (e.target === start){
+          var startPomodoro = setInterval(function(){
+            counter--;
+            if (counter >= 0){
+              timer.innerHTML = counter;
+            }
+            if (counter === 0){
+              timer.innerHTML = "Pomodoro Over";
+              clearInterval(counter);
+            }
+          }, 1000)
+          // TODO: Stop counter when "stop" is clicked.
+        } else if (e.target === stop) {
+          clearTimeout(counter);
+        }
 
+      }
+      e.stopPropagation();
       };
 
 
