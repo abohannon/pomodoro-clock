@@ -13,8 +13,6 @@ I can reset the clock for my next pomodoro.
 I can customize the length of each pomodoro.
 
 -->
-
-
 <!DOCTYPE html>
 <html>
 
@@ -22,7 +20,6 @@ I can customize the length of each pomodoro.
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Adam's JS Pomodoro Clock</title>
-
   <style>
     body {
       background: #000;
@@ -80,7 +77,6 @@ I can customize the length of each pomodoro.
 </head>
 
 <body>
-
   <div class="clock">
     <div id="timer" class="timer align-center">
       0:00
@@ -94,61 +90,53 @@ I can customize the length of each pomodoro.
     </div>
   </div>
   <script>
+    var timer = document.querySelector("#timer");
+    var buttons = document.querySelector(".buttons");
+    var start = document.querySelector("#start");
+    var stop = document.querySelector("#stop");
+    var reset = document.querySelector("#reset");
+    var add = document.querySelector("#add");
+    var subtract = document.querySelector("#subtract");
+    var counter = 25;
+    var startPomodoro;
 
-  var timer = document.querySelector("#timer");
-  var buttons = document.querySelector(".buttons");
-  var start = document.querySelector("#start");
-  var stop = document.querySelector("#stop");
-  var reset = document.querySelector("#reset");
-  var add = document.querySelector("#add");
-  var subtract = document.querySelector("#subtract");
-  var counter = 25;
+    buttons.addEventListener("click", pomodoroClock, false);
 
-  buttons.addEventListener("click", pomodoroClock, false);
+    timer.innerHTML = counter;
 
-    function pomodoroClock(e){
-      if (e.target !== e.currentTarget){ // prevents click event on parent div
+    function pomodoroClock(e) {
+      if (e.target !== e.currentTarget) { // prevents click event on parent div
         // start timer
         // TODO: Pressing more than once speeds up the timer. Need to prevent this.
-        if (e.target === start){
-          var startPomodoro = setInterval(function(){
+        if (e.target === start) {
+          startPomodoro = setInterval(function() {
             counter--;
-            if (counter >= 0){
+            if (counter >= 0) {
               timer.innerHTML = counter;
             }
-            if (counter === 0){
+            if (counter === 0) {
               timer.innerHTML = "Pomodoro Over";
               clearInterval(counter);
             }
           }, 1000)
-          // TODO: Stop counter when "stop" is clicked.
         } else if (e.target === stop) {
-          clearTimeout(counter);
+          clearInterval(startPomodoro);
+        } else if (e.target === add) {
+          counter = counter + 1;
+          timer.innerHTML = counter;
+        } else if (e.target === subtract) {
+          counter = counter - 1;
+          timer.innerHTML = counter;
+        } else if (e.target === reset) {
+          clearInterval(startPomodoro);
+          counter = 25;
+          timer.innerHTML = counter;
         }
 
       }
       e.stopPropagation();
-      };
-
-
-
-
-
-
-
-
-
-
-
+    };
   </script>
-
-
-
-
-
-
-
-
 
 </body>
 
