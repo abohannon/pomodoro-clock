@@ -79,7 +79,7 @@ I can customize the length of each pomodoro.
 <body>
   <div class="clock">
     <div id="timer" class="timer align-center">
-      0:00
+      25:00
     </div>
     <div class="buttons align-center">
       <button id="start" class="btn green">Start</button>
@@ -97,22 +97,23 @@ I can customize the length of each pomodoro.
     var reset = document.querySelector("#reset");
     var add = document.querySelector("#add");
     var subtract = document.querySelector("#subtract");
-    var counter = 25;
+    var counter = 1500;
     var startPomodoro;
 
     buttons.addEventListener("click", pomodoroClock, false);
 
-    timer.innerHTML = counter;
 
     function pomodoroClock(e) {
       if (e.target !== e.currentTarget) { // prevents click event on parent div
         // start timer
         // TODO: Pressing more than once speeds up the timer. Need to prevent this.
         if (e.target === start) {
+          console.log("start");
           startPomodoro = setInterval(function() {
             counter--;
             if (counter >= 0) {
-              timer.innerHTML = counter;
+              var currentTime = parseInt(counter/60) + ":" + (counter%60);
+              timer.innerHTML = currentTime;
             }
             if (counter === 0) {
               timer.innerHTML = "Pomodoro Over";
@@ -120,17 +121,25 @@ I can customize the length of each pomodoro.
             }
           }, 1000)
         } else if (e.target === stop) {
+          console.log("stop");
           clearInterval(startPomodoro);
-        } else if (e.target === add) {
-          counter = counter + 1;
-          timer.innerHTML = counter;
+        }
+        
+        // TODO: return formatted time instead of total seconds. When there are 4 digits, add/sub work fine, but when the format is 25:00 with two zeros, pressing add/sub cuts off the last zero.
+        else if (e.target === add) {
+          console.log("add");
+          counter = counter + 60;
+          timer.innerHTML = parseInt(counter/60) + ":" + (counter%60);
         } else if (e.target === subtract) {
-          counter = counter - 1;
-          timer.innerHTML = counter;
+          console.log("sub");
+          counter = counter - 60;
+          timer.innerHTML = parseInt(counter/60) + ":" + (counter%60);
         } else if (e.target === reset) {
+          console.log("reset");
           clearInterval(startPomodoro);
-          counter = 25;
-          timer.innerHTML = counter;
+          counter = 1500;
+          timer.innerHTML = parseInt(counter/60) + ":" + (counter%60) + "0";
+
         }
 
       }
