@@ -22,7 +22,6 @@ I can customize the length of each pomodoro.
   <title>Adam's JS Pomodoro Clock</title>
   <style>
     body {
-      background: #000;
       font-family: 'Raleway', sans-serif;
     }
 
@@ -31,14 +30,25 @@ I can customize the length of each pomodoro.
       height: 400px;
       width: 400px;
       border-radius: 3px;
-      padding: 20px 40px 20px 40px;
+      padding: 20px 0 20px 0;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .timer {
       font-size: 72px;
       font-weight: 300;
-      height: 200px;
+      height: 300px;
+      width: 300px;
+      line-height: 287px;
+      border: 4px solid;
+      border-radius: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 2rem;
     }
+
+    .timer p {}
 
     .align-center {
       text-align: center;
@@ -55,6 +65,7 @@ I can customize the length of each pomodoro.
       font-family: inherit;
       font-weight: 800;
       border: none;
+      border-radius: 3px;
       outline: none;
       cursor: pointer;
       transition-duration: 0.4s;
@@ -72,24 +83,28 @@ I can customize the length of each pomodoro.
     .red {
       background: rgb(175, 0, 0);
     }
+
+    p {
+      font-size: 34px;
+      line-height: 222px;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,800" rel="stylesheet">
 </head>
 
 <body>
   <div class="clock">
-    <div id="timer" class="timer align-center">
-    </div>
+    <div id="timer" class="timer align-center"></div>
     <div class="buttons align-center">
       <button id="start" class="btn green">Start</button>
       <button id="stop" class="btn red">Stop</button>
       <button id="reset" class="btn">Reset</button>
-      <button id="add" class="btn">+</button>
       <button id="subtract" class="btn">-</button>
+      <button id="add" class="btn">+</button>
     </div>
   </div>
-  <script>
 
+  <script>
     var timer = document.querySelector("#timer");
     var buttons = document.querySelector(".buttons");
     var start = document.querySelector("#start");
@@ -107,21 +122,23 @@ I can customize the length of each pomodoro.
 
     var running = false;
 
+    var audio = new Audio('http://cd.textfiles.com/10000soundssongs/WAV/DINGING.WAV');
+
     buttons.addEventListener("click", pomodoroClock, false);
 
-    function formatTime(){
-      minutes = parseInt(counter/60);
-      seconds = parseInt(counter%60);
-      if (minutes < 10 && minutes > 0){
+    function formatTime() {
+      minutes = parseInt(counter / 60);
+      seconds = parseInt(counter % 60);
+      if (minutes < 10 && minutes > 0) {
         minutes = "0" + minutes;
       }
-      if (minutes < 0){ // prevent timer from going negative
+      if (minutes < 0) { // prevent timer from going negative
         minutes = "";
       }
-      if (minutes > 60){ // prevent timer from going above 60 minutes
+      if (minutes > 60) { // prevent timer from going above 60 minutes
         minutes = 60;
       }
-      if (seconds < 10){
+      if (seconds < 10) {
         seconds = "0" + seconds;
       }
     }
@@ -134,45 +151,40 @@ I can customize the length of each pomodoro.
       if (e.target !== e.currentTarget) { // prevents click event on parent div
         // start timer
         if (e.target === start) {
-          console.log("start");
-          if (running !== true){ // prevents setInterval from running twice and speeding up timer
-          startPomodoro = setInterval(function() {
-            running = true;
-            counter--;
-            formatTime();
-            if (counter >= 0) {
-              currentTime = minutes + ":" + seconds;
-              timer.innerHTML = currentTime;
-            }
-            if (counter === 0) {
-              timer.innerHTML = "Pomodoro Over";
-              clearInterval(startPomodoro);
-            }
-          }, 1000);
-        }
+          if (running !== true) { // prevents setInterval from running twice and speeding up timer
+            startPomodoro = setInterval(function() {
+              running = true;
+              counter--;
+              formatTime();
+              if (counter >= 0) {
+                currentTime = minutes + ":" + seconds;
+                timer.innerHTML = currentTime;
+              }
+              if (counter === 0) {
+                audio.play();
+                timer.innerHTML = "<p>Pomodoro Over</p>";
+                clearInterval(startPomodoro);
+              }
+            }, 1000);
+          }
         } else if (e.target === stop) {
-          console.log("stop");
           clearInterval(startPomodoro);
         }
 
-        // TODO: return formatted time instead of total seconds. When there are 4 digits, add/sub work fine, but when the format is 25:00 with two zeros, pressing add/sub cuts off the last zero.
         if (e.target === add) {
-          console.log("add");
           counter = counter + 60;
           counter2 = counter;
           formatTime();
           timer.innerHTML = minutes + ":" + seconds;
         } else if (e.target === subtract) {
-          console.log("sub");
           counter = counter - 60;
           counter2 = counter;
           formatTime();
           timer.innerHTML = minutes + ":" + seconds;
         } else if (e.target === reset) {
-          console.log("reset");
           running = false;
           clearInterval(startPomodoro);
-          if (counter2 === undefined){
+          if (counter2 === undefined) {
             counter = 1500;
           } else {
             counter = counter2;
@@ -184,7 +196,6 @@ I can customize the length of each pomodoro.
       }
       e.stopPropagation();
     };
-
   </script>
 
 </body>
