@@ -79,7 +79,6 @@ I can customize the length of each pomodoro.
 <body>
   <div class="clock">
     <div id="timer" class="timer align-center">
-      25:00
     </div>
     <div class="buttons align-center">
       <button id="start" class="btn green">Start</button>
@@ -90,6 +89,7 @@ I can customize the length of each pomodoro.
     </div>
   </div>
   <script>
+
     var timer = document.querySelector("#timer");
     var buttons = document.querySelector(".buttons");
     var start = document.querySelector("#start");
@@ -97,75 +97,94 @@ I can customize the length of each pomodoro.
     var reset = document.querySelector("#reset");
     var add = document.querySelector("#add");
     var subtract = document.querySelector("#subtract");
-    var counter = 1500;
+
+    var counter = 1500; // 1500 seconds = 25 minutes
+    var counter2;
+    var currentTime;
     var minutes;
     var seconds;
-    var currentTime;
     var startPomodoro;
+
+    var running = false;
 
     buttons.addEventListener("click", pomodoroClock, false);
 
-    function parseTime(){
+    function formatTime(){
       minutes = parseInt(counter/60);
       seconds = parseInt(counter%60);
-    }
-
-    parseTime(); // runs function so global variables aren't undefined on page load.
-
-    function formatTime(){
-      if (minutes < 10){
+      if (minutes < 10 && minutes > 0){
         minutes = "0" + minutes;
+      }
+      if (minutes < 0){ // prevent timer from going negative
+        minutes = "";
+      }
+      if (minutes > 60){ // prevent timer from going above 60 minutes
+        minutes = 60;
       }
       if (seconds < 10){
         seconds = "0" + seconds;
       }
     }
 
+    formatTime(); // runs function so global variables aren't undefined on page load.
+
+    timer.innerHTML = minutes + ":" + seconds;
+
     function pomodoroClock(e) {
       if (e.target !== e.currentTarget) { // prevents click event on parent div
         // start timer
-        // TODO: Pressing more than once speeds up the timer. Need to prevent this.
         if (e.target === start) {
           console.log("start");
+          if (running !== true){ // prevents setInterval from running twice and speeding up timer
           startPomodoro = setInterval(function() {
+            running = true;
             counter--;
-            parseTime();
             formatTime();
             if (counter >= 0) {
               currentTime = minutes + ":" + seconds;
               timer.innerHTML = currentTime;
             }
-
             if (counter === 0) {
               timer.innerHTML = "Pomodoro Over";
-              clearInterval(counter);
+              clearInterval(startPomodoro);
             }
-          }, 1000)
+          }, 1000);
+        }
         } else if (e.target === stop) {
           console.log("stop");
           clearInterval(startPomodoro);
         }
 
         // TODO: return formatted time instead of total seconds. When there are 4 digits, add/sub work fine, but when the format is 25:00 with two zeros, pressing add/sub cuts off the last zero.
-        else if (e.target === add) {
+        if (e.target === add) {
           console.log("add");
           counter = counter + 60;
+          counter2 = counter;
+          formatTime();
           timer.innerHTML = minutes + ":" + seconds;
         } else if (e.target === subtract) {
           console.log("sub");
           counter = counter - 60;
+          counter2 = counter;
+          formatTime();
           timer.innerHTML = minutes + ":" + seconds;
         } else if (e.target === reset) {
           console.log("reset");
+          running = false;
           clearInterval(startPomodoro);
-          counter = 1500;
+          if (counter2 === undefined){
+            counter = 1500;
+          } else {
+            counter = counter2;
+          }
+          formatTime();
           timer.innerHTML = minutes + ":" + seconds;
-
         }
 
       }
       e.stopPropagation();
     };
+
   </script>
 
 </body>
