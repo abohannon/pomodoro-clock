@@ -19,4 +19,3 @@ simplify things a lot more.
 - Planning out my apps in advance. I had an idea of how I wanted to attack the clock but didn't write anything down.
 This made things more confusing a long the way and ultimately resulted in me hacking things together with a lot of trial
 and error. I think I could cut down on this by having a clearer idea where I'm going before I start.
-- 
